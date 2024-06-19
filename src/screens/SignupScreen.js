@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GradientText from '../components/GradientText';
+import { CommonActions } from '@react-navigation/native';
 
 const SignupScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -12,7 +13,18 @@ const SignupScreen = ({ navigation }) => {
             // Save credentials to AsyncStorage
             await AsyncStorage.setItem('userCredentials', JSON.stringify({ username, password }));
             Alert.alert('Account created successfully!');
-            navigation.navigate('Login');
+            
+            // Clear input fields
+            setUsername('');
+            setPassword('');
+
+            // Navigate to Login screen
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                })
+            );
         } catch (error) {
             console.error('Error creating account:', error);
         }
@@ -107,5 +119,4 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
     },
-   
 });

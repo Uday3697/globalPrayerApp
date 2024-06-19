@@ -50,6 +50,17 @@ const HomeStack = () => {
   );
 };
 
+const AuthStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="SignUp" component={SignupScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Forgot" component={ForgotPasswordScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Home" component={HomeStack} options={{ headerShown: false }}/>
+    </Stack.Navigator>
+  );
+};
+
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -117,16 +128,6 @@ const App = () => {
         <AuthStack />
       )}
     </NavigationContainer>
-  );
-};
-
-const AuthStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="SignUp" component={SignupScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Forgot" component={ForgotPasswordScreen} options={{ headerShown: false }} />
-    </Stack.Navigator>
   );
 };
 

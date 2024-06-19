@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,25 +10,60 @@ const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    const getUserCredentials = async () => {
+      try {
+        const credentials = await AsyncStorage.getItem('userCredentials');
+        if (credentials) {
+          const { username, password } = JSON.parse(credentials);
+          setUsername(username);
+          setPassword(password);
+        }
+      } catch (error) {
+        console.error('Error fetching user credentials:', error);
+      }
+    };
+    getUserCredentials();
+  }, []);
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  const showAlert = (title, message) => {
+    return new Promise((resolve) => {
+      Alert.alert(
+        title,
+        message,
+        [
+          {
+            text: "OK",
+            onPress: () => resolve(true),
+          },
+        ],
+        { cancelable: false }
+      );
+    });
+  };
+
   const handleLogin = async () => {
     try {
-      const storedCredentials = await AsyncStorage.getItem('userCredentials');
-      const parsedCredentials = storedCredentials ? JSON.parse(storedCredentials) : null;
-
-      if (parsedCredentials && username === parsedCredentials.username && password === parsedCredentials.password) {
-        await AsyncStorage.setItem('userToken', 'abc123');
-        navigation.navigate('Home');
-      } else {
-        Alert.alert('Invalid username or password');
-      }
+        const credentials = await AsyncStorage.getItem('userCredentials');
+        if (credentials) {
+            const { username: storedUsername, password: storedPassword } = JSON.parse(credentials);
+            if (username === storedUsername && password === storedPassword) {
+                await showAlert('Login successful!', 'You are now logged in.');
+                navigation.navigate('Home');
+            } else {
+                showAlert('Invalid username or password', 'Please try again.');
+            }
+        } else {
+            showAlert('No account found', 'Please sign up.');
+        }
     } catch (error) {
-      console.error('Error logging in:', error);
+        console.error('Error logging in:', error);
     }
-  };
+};
 
   return (
     <View style={styles.container}>
