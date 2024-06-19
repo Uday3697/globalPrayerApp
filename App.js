@@ -9,6 +9,8 @@ import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import NotificationScreen from './src/screens/NotificationScreen';
 
 
 
@@ -98,6 +100,8 @@ const App = () => {
           <Tab.Screen name="Prayer" component={PrayerScreen} />
           <Tab.Screen name="Message" component={MessageScreen} />
           <Tab.Screen name="Songs" component={SongsScreen} />
+          <Tab.Screen name="Profile" component={ProfileScreen} />
+          <Tab.Screen name="Notifications" component={NotificationScreen} />
         </Tab.Navigator>
       ) : (
         <AuthStack />
