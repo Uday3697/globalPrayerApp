@@ -4,9 +4,8 @@ import { Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import GradientText from '../components/GradientText';
-import { useNavigation } from '@react-navigation/native';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +13,6 @@ const LoginScreen = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const {navigate} =useNavigation()
 
   const handleLogin = async () => {
     try {
@@ -23,7 +21,7 @@ const LoginScreen = () => {
 
       if (parsedCredentials && username === parsedCredentials.username && password === parsedCredentials.password) {
         await AsyncStorage.setItem('userToken', 'abc123');
-      navigate('Home');
+        navigation.navigate('Home');
       } else {
         Alert.alert('Invalid username or password');
       }
@@ -66,10 +64,10 @@ const LoginScreen = () => {
           <Text style={styles.buttonText}> G+ Login with gmail</Text>
         </TouchableOpacity>
         <View style={styles.footer}>
-          <TouchableOpacity onPress={() => navigate('SignUp')}>
+          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
             <Text style={styles.createAccountText}>Create Account?</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigate('Forgot')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Forgot')}>
             <Text style={styles.createAccountText}>Forgot Password</Text>
           </TouchableOpacity>
         </View>

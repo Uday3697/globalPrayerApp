@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Header } from 'react-native-elements';
-import { View, Text } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, ActivityIndicator } from 'react-native';
 import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
+import HomeScreen from './src/screens/HomeScreen';
 
-const HomeScreen = () => {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home Screen</Text>
-    </View>
-  );
-};
+
 
 const PrayerScreen = () => {
   return (
@@ -41,13 +37,13 @@ const SongsScreen = () => {
 };
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in
     checkLoginStatus();
   }, []);
 
@@ -66,11 +62,9 @@ const App = () => {
 
   if (isLoading) {
     return (
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Loading" component={() => null} />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#10109c" />
+      </View>
     );
   }
 
@@ -100,18 +94,25 @@ const App = () => {
             inactiveTintColor: 'gray',
           }}
         >
-          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Home" component={HomeScreen} options={{headerShown:false}} />
           <Tab.Screen name="Prayer" component={PrayerScreen} />
           <Tab.Screen name="Message" component={MessageScreen} />
           <Tab.Screen name="Songs" component={SongsScreen} />
-          <Tab.Screen name='Login' component={LoginScreen} />
-          <Tab.Screen name='SignUp' component={SignupScreen} />
-          <Tab.Screen name='Forgot' component={ForgotPasswordScreen} />
         </Tab.Navigator>
       ) : (
-        <LoginScreen />
+        <AuthStack />
       )}
     </NavigationContainer>
+  );
+};
+
+const AuthStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="SignUp" component={SignupScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Forgot" component={ForgotPasswordScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
   );
 };
 

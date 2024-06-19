@@ -6,9 +6,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const [emailOrPhone, setEmailOrPhone] = useState('');
 
   const handleForgotPassword = () => {
-    // Implement the functionality to send OTP to the provided email or phone
-    alert('OTP sent to your email or phone');
-    // Redirect to OTP verification screen if needed
+    if(emailOrPhone.length>10){
+    alert('OTP sent to your email or phone \n go and click on link ');
+    setEmailOrPhone('')
+    }
+  };
+  const isSubmitDisabled = () => {
+    return emailOrPhone.length <= 10; 
   };
 
   return (
@@ -23,9 +27,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
               placeholder="Email or Phone"
               value={emailOrPhone}
               onChangeText={setEmailOrPhone}
+              keyboardType="email-address" // Optional: if expecting an email input
             />
           </View>
-          <TouchableOpacity style={styles.submitButton} onPress={handleForgotPassword}>
+          <TouchableOpacity
+            style={[styles.submitButton, isSubmitDisabled() && styles.submitButtonDisabled]}
+            onPress={handleForgotPassword}
+            disabled={isSubmitDisabled()} // Disable the button conditionally
+          >
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -40,6 +49,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+    paddingVertical: 20,
   },
   formContainer: {
     width: '85%',
@@ -62,6 +72,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     marginBottom: 10,
+    paddingHorizontal: 10,
     marginVertical: 30,
   },
   input: {
@@ -82,6 +93,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  submitButtonDisabled: {
+    backgroundColor: '#ccc', // Style for disabled button
   },
 });
 
