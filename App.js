@@ -11,8 +11,7 @@ import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import NotificationScreen from './src/screens/NotificationScreen';
-
-
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const PrayerScreen = () => {
   return (
@@ -41,11 +40,24 @@ const SongsScreen = () => {
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+const HomeStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Notifications" component={NotificationScreen} />
+    </Stack.Navigator>
+  );
+};
+
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com', // Replace with your web client ID
+    });
     checkLoginStatus();
   }, []);
 
@@ -96,12 +108,10 @@ const App = () => {
             inactiveTintColor: 'gray',
           }}
         >
-          <Tab.Screen name="Home" component={HomeScreen} options={{headerShown:false}} />
+          <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
           <Tab.Screen name="Prayer" component={PrayerScreen} />
           <Tab.Screen name="Message" component={MessageScreen} />
           <Tab.Screen name="Songs" component={SongsScreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} />
-          <Tab.Screen name="Notifications" component={NotificationScreen} />
         </Tab.Navigator>
       ) : (
         <AuthStack />
